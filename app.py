@@ -207,27 +207,26 @@ def detect_by_api():
         'label': client.category_index[cls]['name'],
         'box': {
           'a': {
-            'x': str(left),
-            'y': str(top)
+            'x': left,
+            'y': top
           },
           'b': {
-            'x': str(left),
-            'y': str(bottom)
+            'x': left,
+            'y': bottom
           },
           'c': {
-            'x': str(right),
-            'y': str(bottom)
+            'x': right,
+            'y': bottom
           },
           'd': {
-            'x': str(right),
-            'y': str(top)
+            'x': right,
+            'y': top
           },
         },
         'score': str(scores[i])
       }
   else:
-    result['error'] = 'no boxes detected'
-  return result
+    result['error'] = 'no image found'
 
 
 client = ObjectDetector()
