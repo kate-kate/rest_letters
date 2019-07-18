@@ -195,7 +195,11 @@ def detect_by_api():
     imgdata = base64.b64decode(imgstring)
     image = Image.open(io.BytesIO(imgdata)).convert('RGB')
     boxes, scores, classes, num_detections = client.detect(image)
-    result['num_detections'] = num_detections
+
+    for i in range(num_detections):
+      if scores[i] < 0.7: continue
+      cls = classes[i]
+      result[i] = cls
   else:
     result['hello'] = request.data
   return result
