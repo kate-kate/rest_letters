@@ -199,7 +199,7 @@ def detect_by_api():
     for i in range(num_detections):
       if scores[i] < 0.7: continue
       cls = classes[i]
-      result[i] = cls
+      result[i] = {'label': client.category_index[cls]['name']}
   else:
     result['hello'] = request.data
   return result
