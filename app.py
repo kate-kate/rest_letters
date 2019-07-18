@@ -27,11 +27,11 @@ sys.path.append(MODEL_BASE + '/object_detection')
 sys.path.append(MODEL_BASE + '/slim')
 
 from decorator import requires_auth
-from flask import Flask
 from flask import redirect
 from flask import render_template
 from flask import request
 from flask import url_for
+from flask_api import FlaskAPI
 from flask_wtf.file import FileField
 import numpy as np
 from PIL import Image
@@ -42,9 +42,7 @@ from werkzeug.datastructures import CombinedMultiDict
 from wtforms import Form
 from wtforms import ValidationError
 
-
-app = Flask(__name__)
-
+app = FlaskAPI(__name__)
 
 @app.before_request
 @requires_auth
