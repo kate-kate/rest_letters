@@ -227,6 +227,7 @@ def detect_by_api():
       }
   else:
     result['error'] = 'no image found'
+  return result
 
 
 client = ObjectDetector()
