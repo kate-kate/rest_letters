@@ -194,8 +194,8 @@ def detect_by_api():
   if imgstring != 'f':
     imgdata = base64.b64decode(imgstring)
     image = Image.open(io.BytesIO(imgdata)).convert('RGB')
-    result['boxes'], result['scores'], result['classes'], result['num_detections'] = client.detect(image)
-    #result['hello'] = 'true'
+    boxes, scores, classes, num_detections = client.detect(image)
+    result['num_detections'] = num_detections
   else:
     result['hello'] = request.data
   return result
