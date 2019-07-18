@@ -20,6 +20,7 @@ import base64
 import cStringIO
 import sys
 import tempfile
+import io
 
 MODEL_BASE = '/opt/models/research'
 sys.path.append(MODEL_BASE)
@@ -189,12 +190,14 @@ def post():
 @app.route("/detect", methods=['POST'])
 def detect_by_api():
   result = dict()
-  if 'recipe_image' in request.files:
-    with tempfile.NamedTemporaryFile() as temp:
-      request.files['recipe_image'].save(temp)
-      temp.flush()
-      image = Image.open(temp.name).convert('RGB')
-      result['boxes'], result['scores'], result['classes'], result['num_detections'] = client.detect(image)
+  imgstring = request.data.get('recipe_image', 'f')
+  if imgstring != 'f':
+    imgdata = base64.b64decode(imgstring)
+    image = Image.open(io.BytesIO(imgdata)).convert('RGB')
+    result['boxes'], result['scores'], result['classes'], result['num_detections'] = client.detect(image)
+    #result['hello'] = 'true'
+  else:
+    result['hello'] = request.data
   return result
 
 
