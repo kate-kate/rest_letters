@@ -199,7 +199,17 @@ def detect_by_api():
     for i in range(num_detections):
       if scores[i] < 0.7: continue
       cls = classes[i]
-      result[i] = {'label': client.category_index[cls]['name']}
+      ymin, xmin, ymax, xmax = boxes[i]
+      result[i] = {
+        'label': client.category_index[cls]['name'],
+        'box': {
+          'ymin': ymin,
+          'xmin': xmin,
+          'ymax': ymax,
+          'xmax': xmax,
+        },
+        'score': scores[i]
+      }
   else:
     result['hello'] = request.data
   return result
