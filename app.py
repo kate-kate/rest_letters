@@ -187,7 +187,7 @@ def post():
     return redirect(url_for('upload'))
 
 @app.route("/detect", methods=['POST'])
-def detect_by_api(self, request):
+def detect_by_api():
   result = dict()
   if 'recipe_image' in request.files:
     with tempfile.NamedTemporaryFile() as temp:
