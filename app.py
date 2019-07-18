@@ -207,20 +207,20 @@ def detect_by_api():
         'label': client.category_index[cls]['name'],
         'box': {
           'a': {
-            'x': left,
-            'y': top
+            'x': str(left),
+            'y': str(top)
           },
           'b': {
-            'x': left,
-            'y': bottom
+            'x': str(left),
+            'y': str(bottom)
           },
           'c': {
-            'x': right,
-            'y': bottom
+            'x': str(right),
+            'y': str(bottom)
           },
           'd': {
-            'x': right,
-            'y': top
+            'x': str(right),
+            'y': str(top)
           },
         },
         'score': str(scores[i])
