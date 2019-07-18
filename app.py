@@ -194,19 +194,34 @@ def detect_by_api():
   if imgstring != 'f':
     imgdata = base64.b64decode(imgstring)
     image = Image.open(io.BytesIO(imgdata)).convert('RGB')
+    im_width, im_height = image.size
     boxes, scores, classes, num_detections = client.detect(image)
 
     for i in range(num_detections):
       if scores[i] < 0.7: continue
       cls = classes[i]
       ymin, xmin, ymax, xmax = boxes[i]
+      (left, right, top, bottom) = (xmin * im_width, xmax * im_width,
+                                    ymin * im_height, ymax * im_height)
       result[i] = {
         'label': client.category_index[cls]['name'],
         'box': {
-          'ymin': str(ymin),
-          'xmin': str(xmin),
-          'ymax': str(ymax),
-          'xmax': str(xmax),
+          'a': {
+            'x': str(left),
+            'y': str(top)
+          },
+          'b': {
+            'x': str(left),
+            'y': str(bottom)
+          },
+          'c': {
+            'x': str(right),
+            'y': str(bottom)
+          },
+          'd': {
+            'x': str(right),
+            'y': str(top)
+          },
         },
         'score': str(scores[i])
       }
