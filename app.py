@@ -203,12 +203,12 @@ def detect_by_api():
       result[i] = {
         'label': client.category_index[cls]['name'],
         'box': {
-          'ymin': ymin,
-          'xmin': xmin,
-          'ymax': ymax,
-          'xmax': xmax,
+          'ymin': str(ymin),
+          'xmin': str(xmin),
+          'ymax': str(ymax),
+          'xmax': str(xmax),
         },
-        'score': scores[i]
+        'score': str(scores[i])
       }
   else:
     result['hello'] = request.data
