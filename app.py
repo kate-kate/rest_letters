@@ -85,7 +85,6 @@ class ObjectDetector(object):
     categories = label_map_util.convert_label_map_to_categories(
         label_map, max_num_classes=90, use_display_name=True)
     self.category_index = label_map_util.create_category_index(categories)
-    print(self.category_index)
 
   def _build_graph(self):
     detection_graph = tf.Graph()
@@ -186,6 +185,17 @@ def post():
                            photo_form=photo_form, result=result)
   else:
     return redirect(url_for('upload'))
+
+@app.route("/detect", methods=['POST'])
+def detect_by_api(self, request):
+  result = dict()
+  if 'recipe_image' in request.files:
+    with tempfile.NamedTemporaryFile() as temp:
+      request.files['recipe_image'].save(temp)
+      temp.flush()
+      image = Image.open(temp.name).convert('RGB')
+      result['boxes'], result['scores'], result['classes'], result['num_detections'] = client.detect(image)
+  return result
 
 
 client = ObjectDetector()
