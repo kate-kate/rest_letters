@@ -206,7 +206,7 @@ def post():
     with tempfile.NamedTemporaryFile() as temp:
       form.input_photo.data.save(temp)
       temp.flush()
-      result = detect_objects(temp.name)
+      result = client.detect_all_objects(temp.name)
 
     photo_form = PhotoForm(request.form)
     return render_template('upload.html',
