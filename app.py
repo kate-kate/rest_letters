@@ -142,7 +142,7 @@ class ObjectDetector(object):
       scores,
       self.category_index,
       use_normalized_coordinates=True,
-      line_thickness=8)
+      line_thickness=2)
 
     img = Image.fromarray(image_np, 'RGB')
     result = {}
