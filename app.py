@@ -39,6 +39,7 @@ from PIL import Image
 from PIL import ImageDraw
 import tensorflow as tf
 from utils import label_map_util
+from utils import visualization_utils as vis_util
 from werkzeug.datastructures import CombinedMultiDict
 from wtforms import Form
 from wtforms import ValidationError
@@ -122,6 +123,32 @@ class ObjectDetector(object):
         np.squeeze, [boxes, scores, classes, num_detections])
 
     return boxes, scores, classes.astype(int), num_detections
+
+  def _encode_image(self, image):
+    image_buffer = cStringIO.StringIO()
+    image.save(image_buffer, format='PNG')
+    imgstr = 'data:image/png;base64,{:s}'.format(
+      base64.b64encode(image_buffer.getvalue()))
+    return imgstr
+
+  def detect_all_objects(self, image_path):
+    image = Image.open(image_path).convert('RGB')
+    boxes, scores, classes, num_detections = self.detect(image)
+    image_np = self._load_image_into_numpy_array(image)
+    vis_util.visualize_boxes_and_labels_on_image_array(
+      image_np,
+      boxes,
+      classes,
+      scores,
+      self.category_index,
+      use_normalized_coordinates=True,
+      line_thickness=8)
+
+    img = Image.fromarray(image_np, 'RGB')
+    result = {}
+    result['original'] = self._encode_image(img.copy())
+
+    return result
 
 
 def draw_bounding_box_on_image(image, box, color='red', thickness=4):
