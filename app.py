@@ -301,23 +301,25 @@ def detect_by_api():
           }
 
     resLines = []
-    for line in lines:
-      if len(line) >= 3:
-        resLine = []
-        for lineElem in line:
-          resLine.append(lineElem['label'])
-        resLines.append(resLine)
+    for line in lines.items():
+      resLines.append(len(line))
+#      if len(line) >= 3:
+#        resLine = []
+#        for lineElem in line:
+#          resLine.append(lineElem['label'])
+#        resLines.append(resLine)
 
-    resCols = []
-    for col in cols:
-      if len(col) >= 3:
-        resCol = []
-        for colElem in col:
-          resCol.append(colElem['label'])
-        resCols.append(resCol)
+#    resCols = []
+#    for col in cols:
+#      if len(col) >= 3:
+#        resCol = []
+#        for colElem in col:
+#          resCol.append(colElem['label'])
+#        resCols.append(resCol)
 
     result['lines'] = resLines
-    result['cols'] = resCols
+    result['rawLines'] = lines
+#    result['cols'] = resCols
   else:
     result['error'] = 'no image found'
   return result
