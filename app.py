@@ -238,8 +238,6 @@ def detect_by_api():
         cols[int(left)] = {}
         cols[int(left)][int(top)] = {}
         cols[int(left)][int(top)] = {
-          'top': int(top),
-          'left': int(left),
           'label': client.category_index[cls]['name'],
           'scores': str(scores[i])
         }
@@ -311,10 +309,10 @@ def detect_by_api():
     resCols = []
     for key,col in cols:
       if len(col) >= 3:
-        resCol = []
-        for colElem in col:
-          resCol.append(colElem['label'])
-        resCols.append(resCol)
+        # resCol = []
+        # for colElem in col:
+        #   resCol.append(colElem['label'])
+        resCols.append(col)
 
     result['lines'] = resLines
     result['cols'] = resCols
