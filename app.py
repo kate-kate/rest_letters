@@ -253,17 +253,17 @@ def detect_by_api():
           'scores': str(scores[i]),
           'first': 'True'
         }
-      else:
-        if int(left) not in all:
-          all[int(left)] = {}
-        all[int(left)][int(top)] = {}
-        all[int(left)][int(top)] = {
-          'top': int(top),
-          'left': int(left),
-          'label': client.category_index[cls]['name'],
-          'scores': str(scores[i]),
-          'i': i
-        }
+      # else:
+      #   if int(left) not in all:
+      #     all[int(left)] = {}
+      #   all[int(left)][int(top)] = {}
+      #   all[int(left)][int(top)] = {
+      #     'top': int(top),
+      #     'left': int(left),
+      #     'label': client.category_index[cls]['name'],
+      #     'scores': str(scores[i]),
+      #     'i': i
+      #   }
         # foundCol = False
         # for colLeft in cols.keys():
         #   if math.fabs(colLeft - left) < 20:
