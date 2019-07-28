@@ -287,7 +287,6 @@ def detect_by_api():
             #     'label': client.category_index[cls]['name'],
             #     'scores': str(scores[i])
             #   }
-            break
         if foundLine == False:
           lines[int(top)] = {}
           lines[int(top)][int(left)] = {}
