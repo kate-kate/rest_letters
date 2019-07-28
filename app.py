@@ -235,60 +235,47 @@ def detect_by_api():
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
 
-      # if len(cols) == 0:
-      #   cols[int(left)] = {}
-      #   cols[int(left)][int(top)] = {}
-      #   cols[int(left)][int(top)] = {
-      #     'top': int(top),
-      #     'left': int(left),
-      #     'label': client.category_index[cls]['name'],
-      #     'scores': str(scores[i])
-      #   }
-      #   all[int(left)] = {}
-      #   all[int(left)][int(top)] = {}
-      #   all[int(left)][int(top)] = {
-      #     'top': int(top),
-      #     'left': int(left),
-      #     'label': client.category_index[cls]['name'],
-      #     'scores': str(scores[i]),
-      #     'first': 'True'
-      #   }
-      # else:
-      #   if int(left) not in all:
-      #     all[int(left)] = {}
-      #   all[int(left)][int(top)] = {}
-      #   all[int(left)][int(top)] = {
-      #     'top': int(top),
-      #     'left': int(left),
-      #     'label': client.category_index[cls]['name'],
-      #     'scores': str(scores[i]),
-      #     'i': i
-      #   }
-        # foundCol = False
-        # for colLeft in cols.keys():
-        #   if math.fabs(colLeft - left) < 20:
-        #     foundCol = True
-        #     all[int(left)][int(top)]['foundLeft'] = 'True'
-        #     cols[colLeft][int(top)] = {}
-        #     cols[colLeft][int(top)] = {
-        #       'top': int(top),
-        #       'left': int(left),
-        #       'label': client.category_index[cls]['name'],
-        #       'scores': str(scores[i])
-        #     }
-        # if foundCol == False:
-        #   cols[int(left)] = {}
-        #   cols[int(left)][int(top)] = {}
-        #   cols[int(left)][int(top)] = {
-        #     'top': int(top),
-        #     'left': int(left),
-        #     'label': client.category_index[cls]['name'],
-        #     'scores': str(scores[i])
-        #   }
+      if len(cols) == 0:
+        cols[int(left)] = {}
+        cols[int(left)][int(top)] = {}
+        cols[int(left)][int(top)] = {
+          'top': int(top),
+          'left': int(left),
+          'label': client.category_index[cls]['name'],
+          'scores': str(scores[i])
+        }
+        all[int(left)] = {}
+        all[int(left)][int(top)] = {}
+        all[int(left)][int(top)] = {
+          'top': int(top),
+          'left': int(left),
+          'label': client.category_index[cls]['name'],
+          'scores': str(scores[i]),
+          'first': 'True'
+        }
+      else:
+        if int(left) not in all:
+          all[int(left)] = {}
+        all[int(left)][int(top)] = {}
+        all[int(left)][int(top)] = {
+          'top': int(top),
+          'left': int(left),
+          'label': client.category_index[cls]['name'],
+          'scores': str(scores[i]),
+          'i': i
+        }
+        foundCol = False
+        for colLeft in cols.keys():
+          if math.fabs(colLeft - left) < 20:
+            foundCol = True
 
       if len(lines) == 0:
         lines[int(top)] = {}
-        lines[int(top)][int(left)] = client.category_index[cls]['name']
+        lines[int(top)][int(left)] = {}
+        lines[int(top)][int(left)] = {
+          'label': client.category_index[cls]['name'],
+          'scores': str(scores[i])
+        }
       else:
         foundLine = False
         for lineTop in lines.keys():
@@ -299,15 +286,28 @@ def detect_by_api():
               if math.fabs(lineLeft - left) < 5:
                 foundLeft = True
                 if scores[i] > float(lines[lineTop][lineLeft]['scores']):
-                  lines[lineTop][lineLeft] = client.category_index[cls]['name']
+                  lines[lineTop][lineLeft] = {
+                    'label': client.category_index[cls]['name'],
+                    'scores': str(scores[i])
+                  }
                 break
 
             if foundLeft == False:
-              lines[lineTop][int(left)] = client.category_index[cls]['name']
+              all[int(top)][int(left)]['foundLeft'] = 'False'
+              lines[lineTop][int(left)] = {}
+              lines[lineTop][int(left)] = {
+                'label': client.category_index[cls]['name'],
+                'scores': str(scores[i])
+              }
+
             break
         if foundLine == False:
           lines[int(top)] = {}
-          lines[int(top)][int(left)] = client.category_index[cls]['name']
+          lines[int(top)][int(left)] = {}
+          lines[int(top)][int(left)] = {
+            'label': client.category_index[cls]['name'],
+            'scores': str(scores[i])
+          }
 
     result['lines'] = lines
     result['all'] = all
