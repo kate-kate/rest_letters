@@ -226,6 +226,7 @@ def detect_by_api():
     boxes, scores, classes, num_detections = client.detect(image)
 
     lines = dict()
+    cols = dict()
     all = dict()
     for i in range(num_detections):
       if scores[i] < 0.7: continue
@@ -234,18 +235,18 @@ def detect_by_api():
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
 
-      if len(lines) == 0:
-        lines[int(top)] = {}
-        lines[int(top)][int(left)] = {}
-        lines[int(top)][int(left)] = {
+      if len(cols) == 0:
+        cols[int(left)] = {}
+        cols[int(left)][int(top)] = {}
+        cols[int(left)][int(top)] = {
           'top': int(top),
           'left': int(left),
           'label': client.category_index[cls]['name'],
           'scores': str(scores[i])
         }
-        all[int(top)] = {}
-        all[int(top)][int(left)] = {}
-        all[int(top)][int(left)] = {
+        all[int(left)] = {}
+        all[int(left)][int(top)] = {}
+        all[int(left)][int(top)] = {
           'top': int(top),
           'left': int(left),
           'label': client.category_index[cls]['name'],
@@ -253,16 +254,42 @@ def detect_by_api():
           'first': 'True'
         }
       else:
-        if int(top) not in all:
-          all[int(top)] = {}
-        all[int(top)][int(left)] = {}
-        all[int(top)][int(left)] = {
+        if int(left) not in all:
+          all[int(left)] = {}
+        all[int(left)][int(top)] = {}
+        all[int(left)][int(top)] = {
           'top': int(top),
           'left': int(left),
           'label': client.category_index[cls]['name'],
           'scores': str(scores[i]),
           'i': i
         }
+        foundCol = False
+        for colLeft in cols.keys():
+          if math.fabs(colLeft - left) < 20:
+            foundCol = True
+            all[int(left)][int(top)]['foundLeft'] = 'True'
+            cols[colLeft][int(top)] = {}
+            cols[colLeft][int(top)] = {
+              'top': int(top),
+              'left': int(left),
+              'label': client.category_index[cls]['name'],
+              'scores': str(scores[i])
+            }
+        if foundCol == False:
+          cols[int(left)] = {}
+          cols[int(left)][int(top)] = {}
+          cols[int(left)][int(top)] = {
+            'top': int(top),
+            'left': int(left),
+            'label': client.category_index[cls]['name'],
+            'scores': str(scores[i])
+          }
+
+      if len(lines) == 0:
+        lines[int(top)] = {}
+        lines[int(top)][int(left)] = client.category_index[cls]['name']
+      else:
         foundLine = False
         for lineTop in lines.keys():
           if math.fabs(lineTop - top) < 20:
@@ -271,41 +298,20 @@ def detect_by_api():
             for lineLeft in lines[lineTop].keys():
               if math.fabs(lineLeft - left) < 5:
                 foundLeft = True
-                all[int(top)][int(left)]['foundLeft'] = 'True'
-                all[int(top)][int(left)]['lineLeft'] = lineLeft
-                all[int(top)][int(left)]['gap'] = str(math.fabs(lineLeft - left))
                 if scores[i] > float(lines[lineTop][lineLeft]['scores']):
-                  lines[lineTop][lineLeft] = {
-                    'top': int(top),
-                    'left': int(left),
-                    'label': client.category_index[cls]['name'],
-                    'scores': str(scores[i])
-                  }
+                  lines[lineTop][lineLeft] = client.category_index[cls]['name']
                 break
 
             if foundLeft == False:
-              all[int(top)][int(left)]['foundLeft'] = 'False'
-              lines[lineTop][int(left)] = {}
-              lines[lineTop][int(left)] = {
-                'top': int(top),
-                'left': int(left),
-                'label': client.category_index[cls]['name'],
-                'scores': str(scores[i])
-              }
-
+              lines[lineTop][int(left)] = client.category_index[cls]['name']
             break
         if foundLine == False:
           lines[int(top)] = {}
-          lines[int(top)][int(left)] = {}
-          lines[int(top)][int(left)] = {
-            'top': int(top),
-            'left': int(left),
-            'label': client.category_index[cls]['name'],
-            'scores': str(scores[i])
-          }
+          lines[int(top)][int(left)] = client.category_index[cls]['name']
 
     result['lines'] = lines
     result['all'] = all
+    result['cols'] = cols
   else:
     result['error'] = 'no image found'
   return result
