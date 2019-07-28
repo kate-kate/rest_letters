@@ -299,18 +299,18 @@ def detect_by_api():
           }
 
     resLines = []
-    for key,line in lines.items():
+    for key,line in sorted(lines.items()):
       if len(line) >= 3:
         resLine = ""
-        for lineKey,lineElem in line.items():
+        for lineKey,lineElem in sorted(line.items()):
           resLine += lineElem['label']
         resLines.append(resLine)
 
     resCols = []
-    for key,col in cols.items():
+    for key,col in sorted(cols.items()):
       if len(col) >= 3:
         resCol = ""
-        for colKey,colElem in col.items():
+        for colKey,colElem in sorted(col.items()):
           resCol += colElem['label']
         resCols.append(resCol)
 
