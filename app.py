@@ -266,15 +266,14 @@ def detect_by_api():
         foundLine = False
         for lineTop in lines.keys():
           if math.fabs(lineTop - top) < 20:
-            all[int(top)][int(left)]['found'] = 'True'
-            all[int(top)][int(left)]['lineTop'] = lineTop
-            all[int(top)][int(left)]['gap'] = str(math.fabs(lineTop - top))
-
             foundLine = True
             foundLeft = False
             for lineLeft in lines[lineTop].keys():
-              if lineLeft - left < 5:
+              if math.fabs(lineLeft - left) < 5:
                 foundLeft = True
+                all[int(top)][int(left)]['foundLeft'] = 'True'
+                all[int(top)][int(left)]['lineLeft'] = lineLeft
+                all[int(top)][int(left)]['gap'] = str(math.fabs(lineLeft - left))
                 if scores[i] > float(lines[lineTop][lineLeft]['scores']):
                   lines[lineTop][lineLeft] = {
                     'top': int(top),
@@ -283,8 +282,10 @@ def detect_by_api():
                     'scores': str(scores[i])
                   }
                 break
-            #
-            # if foundLeft == False:
+
+            if foundLeft == False:
+              all[int(top)][int(left)]['foundLeft'] = 'False'
+
             lines[lineTop][int(left)] = {}
             lines[lineTop][int(left)] = {
               'top': int(top),
