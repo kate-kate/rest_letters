@@ -252,32 +252,31 @@ def detect_by_api():
           'first': 'True'
         }
       else:
-        if len(all[int(top)]) == 0:
+        if int(top) not in all:
           all[int(top)] = {}
-          all[int(top)][int(left)] = {}
-          all[int(top)][int(left)] = {
-            'top': int(top),
-            'left': int(left),
-            'label': client.category_index[cls]['name'],
-            'scores': str(scores[i])
-          }
+        all[int(top)][int(left)] = {}
+        all[int(top)][int(left)] = {
+          'top': int(top),
+          'left': int(left),
+          'label': client.category_index[cls]['name'],
+          'scores': str(scores[i])
+        }
         foundLine = False
         for lineTop in lines.keys():
           if lineTop - top < 20:
             foundLine = True
             foundLeft = False
-            if len(lines[lineTop]):
-              for lineLeft in lines[lineTop].keys():
-                if lineLeft - left < 5:
-                  foundLeft = True
-                  if scores[i] > float(lines[lineTop][lineLeft]['scores']):
-                    lines[lineTop][lineLeft] = {
-                      'top': int(top),
-                      'left': int(left),
-                      'label': client.category_index[cls]['name'],
-                      'scores': str(scores[i])
-                    }
-                  break
+            for lineLeft in lines[lineTop].keys():
+              if lineLeft - left < 5:
+                foundLeft = True
+                if scores[i] > float(lines[lineTop][lineLeft]['scores']):
+                  lines[lineTop][lineLeft] = {
+                    'top': int(top),
+                    'left': int(left),
+                    'label': client.category_index[cls]['name'],
+                    'scores': str(scores[i])
+                  }
+                break
 
             if foundLeft == False:
               lines[lineTop][int(left)] = {}
