@@ -266,7 +266,7 @@ def detect_by_api():
         }
         foundCol = False
         for colLeft in cols.keys():
-          if math.fabs(colLeft - left) < 20:
+          if math.fabs(colLeft - left) < 100:
             foundCol = True
             cols[colLeft][int(top)] = {}
             cols[colLeft][int(top)] = {
