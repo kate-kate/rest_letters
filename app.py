@@ -250,14 +250,15 @@ def detect_by_api():
             foundLeft = False
             if len(lines[lineTop]):
               for lineLeft in lines[lineTop].keys():
-                if lineLeft - left < 5 and scores[i] > float(lines[lineTop][lineLeft]['scores']):
+                if lineLeft - left < 5:
                   foundLeft = True
-                  lines[lineTop][lineLeft] = {
-                    'top': int(top),
-                    'left': int(left),
-                    'label': client.category_index[cls]['name'],
-                    'scores': str(scores[i])
-                  }
+                  if scores[i] > float(lines[lineTop][lineLeft]['scores']):
+                    lines[lineTop][lineLeft] = {
+                      'top': int(top),
+                      'left': int(left),
+                      'label': client.category_index[cls]['name'],
+                      'scores': str(scores[i])
+                    }
                   break
 
             if foundLeft == False:
