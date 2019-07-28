@@ -301,17 +301,17 @@ def detect_by_api():
     resLines = []
     for key,line in lines.items():
       if len(line) >= 3:
-        resLine = []
+        resLine = ""
         for lineKey,lineElem in line.items():
-          resLine.append(lineElem['label'])
+          resLine += lineElem['label']
         resLines.append(resLine)
 
     resCols = []
     for key,col in cols.items():
       if len(col) >= 3:
-        resCol = []
+        resCol = ""
         for colKey,colElem in col.items():
-          resCol.append(colElem['label'])
+          resCol += colElem['label']
         resCols.append(resCol)
 
     result['lines'] = resLines
