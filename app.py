@@ -224,31 +224,29 @@ def detect_by_api():
     im_width, im_height = image.size
     boxes, scores, classes, num_detections = client.detect(image)
 
-    tops = dict()
-    firstLetter = dict()
+    lines = dict()
+    cols = dict()
     for i in range(num_detections):
       if scores[i] < 0.7: continue
       cls = classes[i]
       ymin, xmin, ymax, xmax = boxes[i]
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
-      if len(firstLetter) > 0:
-        if firstLetter['top'] > top:
-          if firstLetter['left'] > left:
-            firstLetter = {
-              'top': int(top),
-              'left': int(left),
-              'label': client.category_index[cls]['name']
-            }
+
+      if len(lines) == 0:
+        lines[int(top)] = {}
+        lines[int(top)][int(left)] = client.category_index[cls]['name']
       else:
-        firstLetter = {
-          'top': int(top),
-          'left': int(left),
-          'label': client.category_index[cls]['name']
-        }
-      # tops[int(top)] = {}
-      # tops[int(top)][int(left)] = client.category_index[cls]['name']
-    result['firstLetter'] = firstLetter
+        foundLine = False
+        for lineTop in lines.keys():
+          if lineTop - top < (top - bottom) / 2:
+            foundLine = True
+            lines[lineTop][int(left)] = client.category_index[cls]['name']
+        if foundLine == False:
+          lines[int(top)] = {}
+          lines[int(top)][int(left)] = client.category_index[cls]['name']
+
+    result['lines'] = lines
   else:
     result['error'] = 'no image found'
   return result
