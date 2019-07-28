@@ -293,7 +293,6 @@ def detect_by_api():
                 break
 
             if foundLeft == False:
-              all[int(top)][int(left)]['foundLeft'] = 'False'
               lines[lineTop][int(left)] = {}
               lines[lineTop][int(left)] = {
                 'label': client.category_index[cls]['name'],
