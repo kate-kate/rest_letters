@@ -235,17 +235,35 @@ def detect_by_api():
 
       if len(lines) == 0:
         lines[int(top)] = {}
-        lines[int(top)][int(left)] = client.category_index[cls]['name']
+        lines[int(top)][int(left)] = {}
+        lines[int(top)][int(left)] = {
+          'top': int(top),
+          'left': int(left),
+          'label': client.category_index[cls]['name'],
+          'scores': str(scores[i])
+        }
       else:
         foundLine = False
         for lineTop in lines.keys():
           if lineTop - top < 20:
             foundLine = True
-            lines[lineTop][int(left)] = client.category_index[cls]['name']
+            lines[lineTop][int(left)] = {}
+            lines[lineTop][int(left)] = {
+              'top': int(top),
+              'left': int(left),
+              'label': client.category_index[cls]['name'],
+              'scores': str(scores[i])
+            }
             break
         if foundLine == False:
           lines[int(top)] = {}
-          lines[int(top)][int(left)] = client.category_index[cls]['name']
+          lines[int(top)][int(left)] = {}
+          lines[int(top)][int(left)] = {
+            'top': int(top),
+            'left': int(left),
+            'label': client.category_index[cls]['name'],
+            'scores': str(scores[i])
+          }
 
     result['lines'] = lines
   else:
