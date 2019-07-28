@@ -270,27 +270,27 @@ def detect_by_api():
             all[int(top)][int(left)]['lineTop'] = lineTop
             all[int(top)][int(left)]['gap'] = str(math.fabs(lineTop - top))
             foundLine = True
-            # foundLeft = False
-            # for lineLeft in lines[lineTop].keys():
-            #   if lineLeft - left < 5:
-            #     foundLeft = True
-            #     if scores[i] > float(lines[lineTop][lineLeft]['scores']):
-            #       lines[lineTop][lineLeft] = {
-            #         'top': int(top),
-            #         'left': int(left),
-            #         'label': client.category_index[cls]['name'],
-            #         'scores': str(scores[i])
-            #       }
-            #     break
-            #
-            # if foundLeft == False:
-            #   lines[lineTop][int(left)] = {}
-            #   lines[lineTop][int(left)] = {
-            #     'top': int(top),
-            #     'left': int(left),
-            #     'label': client.category_index[cls]['name'],
-            #     'scores': str(scores[i])
-            #   }
+            foundLeft = False
+            for lineLeft in lines[lineTop].keys():
+              if lineLeft - left < 5:
+                foundLeft = True
+                if scores[i] > float(lines[lineTop][lineLeft]['scores']):
+                  lines[lineTop][lineLeft] = {
+                    'top': int(top),
+                    'left': int(left),
+                    'label': client.category_index[cls]['name'],
+                    'scores': str(scores[i])
+                  }
+                break
+
+            if foundLeft == False:
+              lines[lineTop][int(left)] = {}
+              lines[lineTop][int(left)] = {
+                'top': int(top),
+                'left': int(left),
+                'label': client.category_index[cls]['name'],
+                'scores': str(scores[i])
+              }
             break
         if foundLine == False:
           lines[int(top)] = {}
