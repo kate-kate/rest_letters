@@ -239,12 +239,13 @@ def detect_by_api():
         cols[int(left)][int(top)] = {}
         cols[int(left)][int(top)] = {
           'label': client.category_index[cls]['name'],
+          'left': int(left),
           'scores': str(scores[i])
         }
       else:
         foundCol = False
         for colLeft in cols.keys():
-          if math.fabs(colLeft - left) < 100:
+          if math.fabs(colLeft - left) < 80:
             foundCol = True
             foundTop = False
             for colTop in cols[colLeft].keys():
@@ -252,6 +253,7 @@ def detect_by_api():
                 foundTop = True
                 if scores[i] > float(cols[colLeft][colTop]['scores']):
                   cols[colLeft][colTop] = {
+                    'left': int(left),
                     'label': client.category_index[cls]['name'],
                     'scores': str(scores[i])
                   }
@@ -260,6 +262,7 @@ def detect_by_api():
             if foundTop == False:
               cols[colLeft][int(top)] = {}
               cols[colLeft][int(top)] = {
+                'left': int(left),
                 'label': client.category_index[cls]['name'],
                 'scores': str(scores[i])
               }
@@ -268,6 +271,7 @@ def detect_by_api():
           cols[int(left)] = {}
           cols[int(left)][int(top)] = {}
           cols[int(left)][int(top)] = {
+            'left': int(left),
             'label': client.category_index[cls]['name'],
             'scores': str(scores[i])
           }
@@ -328,8 +332,8 @@ def detect_by_api():
 
     result['lines'] = resLines
     result['cols'] = resCols
-    # result['rawLines'] = lines
-    # result['rawCols'] = cols
+#    result['rawLines'] = lines
+#    result['rawCols'] = cols
   else:
     result['error'] = 'no image found'
   return result
