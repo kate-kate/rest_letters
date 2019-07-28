@@ -252,26 +252,15 @@ def detect_by_api():
           'first': 'True'
         }
       else:
-        if len(all[int(top)]) == 0:
-          all[int(top)] = {}
-          all[int(top)][int(left)] = {}
-          all[int(top)][int(left)] = {
-            'top': int(top),
-            'left': int(left),
-            'label': client.category_index[cls]['name'],
-            'scores': str(scores[i])
-          }
         foundLine = False
         for lineTop in lines.keys():
           if lineTop - top < 20:
-            all[int(top)][int(left)]['found'] = 'True'
             foundLine = True
             foundLeft = False
             if len(lines[lineTop]):
               for lineLeft in lines[lineTop].keys():
                 if lineLeft - left < 5:
                   foundLeft = True
-                  all[int(top)][int(left)]['foundLeft'] = 'True'
                   if scores[i] > float(lines[lineTop][lineLeft]['scores']):
                     lines[lineTop][lineLeft] = {
                       'top': int(top),
@@ -282,7 +271,6 @@ def detect_by_api():
                   break
 
             if foundLeft == False:
-              all[int(top)][int(left)]['foundLeft'] = 'False'
               lines[lineTop][int(left)] = {}
               lines[lineTop][int(left)] = {
                 'top': int(top),
@@ -292,7 +280,6 @@ def detect_by_api():
               }
             break
         if foundLine == False:
-          all[int(top)][int(left)]['found'] = 'False'
           lines[int(top)] = {}
           lines[int(top)][int(left)] = {}
           lines[int(top)][int(left)] = {
