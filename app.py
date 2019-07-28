@@ -308,16 +308,16 @@ def detect_by_api():
           resLine.append(lineElem['label'])
         resLines.append(resLine)
 
-    # resCols = []
-    # for key,col in cols:
-    #   if len(col) >= 3:
-    #     resCol = []
-    #     for elemKey,colElem in col:
-    #       resCol.append(colElem['label'])
-    #     resCols.append(resCol)
+    resCols = []
+    for key,col in cols:
+      if len(col) >= 3:
+        resCol = []
+        for colElem in col:
+          resCol.append(colElem['label'])
+        resCols.append(resCol)
 
     result['lines'] = resLines
-#    result['cols'] = resCols
+    result['cols'] = resCols
   else:
     result['error'] = 'no image found'
   return result
