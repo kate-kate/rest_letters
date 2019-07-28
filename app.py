@@ -264,27 +264,27 @@ def detect_by_api():
           'scores': str(scores[i]),
           'i': i
         }
-        foundCol = False
-        for colLeft in cols.keys():
-          if math.fabs(colLeft - left) < 20:
-            foundCol = True
-            all[int(left)][int(top)]['foundLeft'] = 'True'
-            cols[colLeft][int(top)] = {}
-            cols[colLeft][int(top)] = {
-              'top': int(top),
-              'left': int(left),
-              'label': client.category_index[cls]['name'],
-              'scores': str(scores[i])
-            }
-        if foundCol == False:
-          cols[int(left)] = {}
-          cols[int(left)][int(top)] = {}
-          cols[int(left)][int(top)] = {
-            'top': int(top),
-            'left': int(left),
-            'label': client.category_index[cls]['name'],
-            'scores': str(scores[i])
-          }
+        # foundCol = False
+        # for colLeft in cols.keys():
+        #   if math.fabs(colLeft - left) < 20:
+        #     foundCol = True
+        #     all[int(left)][int(top)]['foundLeft'] = 'True'
+        #     cols[colLeft][int(top)] = {}
+        #     cols[colLeft][int(top)] = {
+        #       'top': int(top),
+        #       'left': int(left),
+        #       'label': client.category_index[cls]['name'],
+        #       'scores': str(scores[i])
+        #     }
+        # if foundCol == False:
+        #   cols[int(left)] = {}
+        #   cols[int(left)][int(top)] = {}
+        #   cols[int(left)][int(top)] = {
+        #     'top': int(top),
+        #     'left': int(left),
+        #     'label': client.category_index[cls]['name'],
+        #     'scores': str(scores[i])
+        #   }
 
       if len(lines) == 0:
         lines[int(top)] = {}
