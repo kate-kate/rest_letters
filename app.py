@@ -224,34 +224,15 @@ def detect_by_api():
     im_width, im_height = image.size
     boxes, scores, classes, num_detections = client.detect(image)
 
+    tops = dict()
     for i in range(num_detections):
-      if scores[i] < 0.5: continue
+      if scores[i] < 0.7: continue
       cls = classes[i]
       ymin, xmin, ymax, xmax = boxes[i]
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
-      result[i] = {
-        'label': client.category_index[cls]['name'],
-        'box': {
-          'a': {
-            'x': str(left),
-            'y': str(top)
-          },
-          'b': {
-            'x': str(left),
-            'y': str(bottom)
-          },
-          'c': {
-            'x': str(right),
-            'y': str(bottom)
-          },
-          'd': {
-            'x': str(right),
-            'y': str(top)
-          },
-        },
-        'score': str(scores[i])
-      }
+      tops[top][left] = client.category_index[cls]['name']
+    result['tops'] = tops;
   else:
     result['error'] = 'no image found'
   return result
