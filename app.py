@@ -246,11 +246,23 @@ def detect_by_api():
         for colLeft in cols.keys():
           if math.fabs(colLeft - left) < 100:
             foundCol = True
-            cols[colLeft][int(top)] = {}
-            cols[colLeft][int(top)] = {
-              'label': client.category_index[cls]['name'],
-              'scores': str(scores[i])
-            }
+            foundTop = False
+            for colTop in cols[colLeft].keys():
+              if math.fabs(colTop - top) <= 5:
+                foundTop = True
+                if scores[i] > float(cols[colLeft][colTop]['scores']):
+                  cols[colLeft][colTop] = {
+                    'label': client.category_index[cls]['name'],
+                    'scores': str(scores[i])
+                  }
+                break
+
+            if foundTop == True:
+              cols[colLeft][int(top)] = {}
+              cols[colLeft][int(top)] = {
+                'label': client.category_index[cls]['name'],
+                'scores': str(scores[i])
+              }
             break
         if foundCol == False:
           cols[int(left)] = {}
