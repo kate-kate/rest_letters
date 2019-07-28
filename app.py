@@ -239,7 +239,7 @@ def detect_by_api():
       else:
         foundLine = False
         for lineTop in lines.keys():
-          if lineTop - top < (top - bottom) / 2:
+          if lineTop - top < 20:
             foundLine = True
             lines[lineTop][int(left)] = client.category_index[cls]['name']
             break
