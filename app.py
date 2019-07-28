@@ -266,7 +266,8 @@ def detect_by_api():
         for lineTop in lines.keys():
           if lineTop - top < 20:
             all[int(top)][int(left)]['found'] = 'True'
-            all[int(top)][int(left)]['lineTop'] = int(lineTop)
+            all[int(top)][int(left)]['lineTop'] = lineTop
+            all[int(top)][int(left)]['gap'] = str(lineTop - top)
             foundLine = True
             # foundLeft = False
             # for lineLeft in lines[lineTop].keys():
