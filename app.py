@@ -232,7 +232,7 @@ def detect_by_api():
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
       tops[top][left] = client.category_index[cls]['name']
-    result['tops'] = tops;
+    result['tops'] = tops
   else:
     result['error'] = 'no image found'
   return result
