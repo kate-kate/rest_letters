@@ -253,6 +253,7 @@ def detect_by_api():
         }
       else:
         if len(all[int(top)]) == 0:
+          all[int(top)] = {}
           all[int(top)][int(left)] = {}
           all[int(top)][int(left)] = {
             'top': int(top),
