@@ -233,7 +233,7 @@ def detect_by_api():
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
       if len(firstLetter) > 0:
-        if firstLetter['top'] < top:
+        if firstLetter['top'] > top:
           if firstLetter['left'] > left:
             firstLetter = {
               'top': int(top),
