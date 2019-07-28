@@ -257,7 +257,7 @@ def detect_by_api():
                   }
                 break
 
-            if foundTop == True:
+            if foundTop == False:
               cols[colLeft][int(top)] = {}
               cols[colLeft][int(top)] = {
                 'label': client.category_index[cls]['name'],
@@ -328,8 +328,8 @@ def detect_by_api():
 
     result['lines'] = resLines
     result['cols'] = resCols
-    result['rawLines'] = lines
-    result['rawCols'] = cols
+    # result['rawLines'] = lines
+    # result['rawCols'] = cols
   else:
     result['error'] = 'no image found'
   return result
