@@ -252,6 +252,15 @@ def detect_by_api():
           'first': 'True'
         }
       else:
+        if len(all[int(top)]) == 0:
+          all[int(top)] = {}
+          all[int(top)][int(left)] = {}
+          all[int(top)][int(left)] = {
+            'top': int(top),
+            'left': int(left),
+            'label': client.category_index[cls]['name'],
+            'scores': str(scores[i])
+          }
         foundLine = False
         for lineTop in lines.keys():
           if lineTop - top < 20:
