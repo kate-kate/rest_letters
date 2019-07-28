@@ -268,6 +268,18 @@ def detect_by_api():
         for colLeft in cols.keys():
           if math.fabs(colLeft - left) < 20:
             foundCol = True
+            cols[colLeft][int(top)] = {}
+            cols[colLeft][int(top)] = {
+              'label': client.category_index[cls]['name'],
+              'scores': str(scores[i])
+            }
+            break
+        if foundCol == False:
+          cols[int(left)][int(top)] = {}
+          cols[int(left)][int(top)] = {
+            'label': client.category_index[cls]['name'],
+            'scores': str(scores[i])
+          }
 
       if len(lines) == 0:
         lines[int(top)] = {}
@@ -298,7 +310,6 @@ def detect_by_api():
                 'label': client.category_index[cls]['name'],
                 'scores': str(scores[i])
               }
-
             break
         if foundLine == False:
           lines[int(top)] = {}
