@@ -302,18 +302,17 @@ def detect_by_api():
     for key,line in lines.items():
       if len(line) >= 3:
         resLine = []
-        for lineElem in line:
+        for lineKey,lineElem in line.items():
           resLine.append(lineElem['label'])
         resLines.append(resLine)
 
     resCols = []
     for key,col in cols.items():
-      resCols.append(col)
-      # if len(col) >= 3:
-      #   resCol = []
-      #   for colElem in col:
-      #     resCol.append(colElem['label'])
-      #   resCols.append(resCol)
+      if len(col) >= 3:
+        resCol = []
+        for colKey,colElem in col.items():
+          resCol.append(colElem['label'])
+        resCols.append(resCol)
 
     result['lines'] = resLines
     result['cols'] = resCols
