@@ -275,6 +275,7 @@ def detect_by_api():
             }
             break
         if foundCol == False:
+          cols[int(left)] = {}
           cols[int(left)][int(top)] = {}
           cols[int(left)][int(top)] = {
             'label': client.category_index[cls]['name'],
