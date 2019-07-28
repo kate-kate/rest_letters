@@ -231,7 +231,8 @@ def detect_by_api():
       ymin, xmin, ymax, xmax = boxes[i]
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
-      tops[top][left] = client.category_index[cls]['name']
+      tops[int(top)] = {}
+      tops[int(top)][int(left)] = client.category_index[cls]['name']
     result['tops'] = tops
   else:
     result['error'] = 'no image found'
