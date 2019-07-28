@@ -265,6 +265,8 @@ def detect_by_api():
         foundLine = False
         for lineTop in lines.keys():
           if lineTop - top < 20:
+            all[int(top)][int(left)]['found'] = 'True'
+            all[int(top)][int(left)]['lineTop'] = int(lineTop)
             foundLine = True
             # foundLeft = False
             # for lineLeft in lines[lineTop].keys():
