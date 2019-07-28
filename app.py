@@ -227,7 +227,6 @@ def detect_by_api():
 
     lines = dict()
     cols = dict()
-    all = dict()
     for i in range(num_detections):
       if scores[i] < 0.7: continue
       cls = classes[i]
@@ -244,26 +243,7 @@ def detect_by_api():
           'label': client.category_index[cls]['name'],
           'scores': str(scores[i])
         }
-        all[int(left)] = {}
-        all[int(left)][int(top)] = {}
-        all[int(left)][int(top)] = {
-          'top': int(top),
-          'left': int(left),
-          'label': client.category_index[cls]['name'],
-          'scores': str(scores[i]),
-          'first': 'True'
-        }
       else:
-        if int(left) not in all:
-          all[int(left)] = {}
-        all[int(left)][int(top)] = {}
-        all[int(left)][int(top)] = {
-          'top': int(top),
-          'left': int(left),
-          'label': client.category_index[cls]['name'],
-          'scores': str(scores[i]),
-          'i': i
-        }
         foundCol = False
         for colLeft in cols.keys():
           if math.fabs(colLeft - left) < 20:
@@ -320,9 +300,24 @@ def detect_by_api():
             'scores': str(scores[i])
           }
 
-    result['lines'] = lines
-    result['all'] = all
-    result['cols'] = cols
+    resLines = []
+    for line in lines:
+      if len(line) >= 3:
+        resLine = []
+        for lineElem in line:
+          resLine.append(lineElem['label'])
+        resLines.append(resLine)
+
+    resCols = []
+    for col in cols:
+      if len(col) >= 3:
+        resCol = []
+        for colElem in col:
+          resCol.append(colElem['label'])
+        resCols.append(resCol)
+
+    result['lines'] = resLines
+    result['cols'] = resCols
   else:
     result['error'] = 'no image found'
   return result
