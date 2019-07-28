@@ -21,6 +21,7 @@ import cStringIO
 import sys
 import tempfile
 import io
+import math
 
 MODEL_BASE = '/opt/models/research'
 sys.path.append(MODEL_BASE)
@@ -264,10 +265,10 @@ def detect_by_api():
         }
         foundLine = False
         for lineTop in lines.keys():
-          if lineTop - top < 20:
+          if math.fabs(lineTop - top) < 20:
             all[int(top)][int(left)]['found'] = 'True'
             all[int(top)][int(left)]['lineTop'] = lineTop
-            all[int(top)][int(left)]['gap'] = str(lineTop - top)
+            all[int(top)][int(left)]['gap'] = str(math.fabs(lineTop - top))
             foundLine = True
             # foundLeft = False
             # for lineLeft in lines[lineTop].keys():
@@ -290,6 +291,7 @@ def detect_by_api():
             #     'label': client.category_index[cls]['name'],
             #     'scores': str(scores[i])
             #   }
+            break
         if foundLine == False:
           lines[int(top)] = {}
           lines[int(top)][int(left)] = {}
