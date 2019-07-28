@@ -316,6 +316,8 @@ def detect_by_api():
 
     result['lines'] = resLines
     result['cols'] = resCols
+    result['rawLines'] = lines
+    result['rawCols'] = cols
   else:
     result['error'] = 'no image found'
   return result
