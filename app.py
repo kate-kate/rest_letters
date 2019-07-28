@@ -259,7 +259,8 @@ def detect_by_api():
           'top': int(top),
           'left': int(left),
           'label': client.category_index[cls]['name'],
-          'scores': str(scores[i])
+          'scores': str(scores[i]),
+          'i': i
         }
         foundLine = False
         for lineTop in lines.keys():
