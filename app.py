@@ -301,7 +301,7 @@ def detect_by_api():
           }
 
     resLines = []
-    for line in lines.items():
+    for key,line in lines.items():
       resLines.append(len(line))
 #      if len(line) >= 3:
 #        resLine = []
