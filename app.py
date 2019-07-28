@@ -225,15 +225,30 @@ def detect_by_api():
     boxes, scores, classes, num_detections = client.detect(image)
 
     tops = dict()
+    firstLetter = dict()
     for i in range(num_detections):
       if scores[i] < 0.7: continue
       cls = classes[i]
       ymin, xmin, ymax, xmax = boxes[i]
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
-      tops[int(top)] = {}
-      tops[int(top)][int(left)] = client.category_index[cls]['name']
-    result['tops'] = tops
+      if len(firstLetter) > 0:
+        if firstLetter['top'] < top:
+          if firstLetter['left'] > left:
+            firstLetter = {
+              'top': int(top),
+              'left': int(left),
+              'label': client.category_index[cls]['name']
+            }
+      else:
+        firstLetter = {
+          'top': int(top),
+          'left': int(left),
+          'label': client.category_index[cls]['name']
+        }
+      # tops[int(top)] = {}
+      # tops[int(top)][int(left)] = client.category_index[cls]['name']
+    result['firstLetter'] = firstLetter
   else:
     result['error'] = 'no image found'
   return result
