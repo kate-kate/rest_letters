@@ -285,14 +285,14 @@ def detect_by_api():
 
             if foundLeft == False:
               all[int(top)][int(left)]['foundLeft'] = 'False'
+              lines[lineTop][int(left)] = {}
+              lines[lineTop][int(left)] = {
+                'top': int(top),
+                'left': int(left),
+                'label': client.category_index[cls]['name'],
+                'scores': str(scores[i])
+              }
 
-            lines[lineTop][int(left)] = {}
-            lines[lineTop][int(left)] = {
-              'top': int(top),
-              'left': int(left),
-              'label': client.category_index[cls]['name'],
-              'scores': str(scores[i])
-            }
             break
         if foundLine == False:
           lines[int(top)] = {}
