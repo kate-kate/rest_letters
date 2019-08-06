@@ -45,13 +45,15 @@
         <div id="label">original</div>
         <div><img id="photo" src="{{ result['original'] }}" align="left" hspace="10" vspace="10"></div>
         <p>
-          {% for key in result['lines'] %}
-            {{ result['lines'].key }}
+          <b>lines</b><br/>
+          {% for line in result['lines'] %}
+            {{ line }}
           {% endfor %}
         </p>
         <p>
-          {% for key in result['cols'] %}
-            {{ result['cols'].key }}
+          <b>cols</b><br/>
+          {% for col in result['cols'] %}
+            {{ col }}
           {% endfor %}
         </p>
       {% endif %}
