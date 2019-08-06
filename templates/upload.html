@@ -45,14 +45,13 @@
         <div id="label">original</div>
         <div><img id="photo" src="{{ result['original'] }}" align="left" hspace="10" vspace="10"></div>
         <p>
-          <a href="javascript:void(0);" onclick="ChangePhoto('original');">original</a>
-          </br>
-          {% for name, img in result.iteritems() %}
-            {% if name != 'original' %}
-              <a href="javascript:void(0);"
-                 onclick="ChangePhoto('{{ name }}', '{{ result[ name ] }}');">{{ name }}</a>
-              </br>
-            {% endif %}
+          {% for key in result['lines'] %}
+            {{ result['lines'].key }}
+          {% endfor %}
+        </p>
+        <p>
+          {% for key in result['cols'] %}
+            {{ result['cols'].key }}
           {% endfor %}
         </p>
       {% endif %}

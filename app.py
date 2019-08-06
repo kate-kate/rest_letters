@@ -79,6 +79,7 @@ class PhotoForm(Form):
 
 
 class ObjectDetector(object):
+  MIN_SCORE = .1
 
   def __init__(self):
     self.detection_graph = self._build_graph()
@@ -134,6 +135,8 @@ class ObjectDetector(object):
 
   def detect_all_objects(self, image_path):
     image = Image.open(image_path).convert('RGB')
+    im_width, im_height = image.size
+
     boxes, scores, classes, num_detections = self.detect(image)
     image_np = self._load_image_into_numpy_array(image)
     vis_util.visualize_boxes_and_labels_on_image_array(
@@ -143,14 +146,133 @@ class ObjectDetector(object):
       scores,
       self.category_index,
       use_normalized_coordinates=True,
-      min_score_thresh=.1,
+      min_score_thresh=self.MIN_SCORE,
       line_thickness=2)
 
     img = Image.fromarray(image_np, 'RGB')
     result = {}
     result['original'] = self._encode_image(img.copy())
+    result['lines'] = self.get_lines(num_detections, scores, classes, boxes, im_width, im_height)
+    result['cols'] = self.get_cols(num_detections, scores, classes, boxes, im_width, im_height)
 
     return result
+
+  def get_lines(self, num_detections, scores, classes, boxes, im_width, im_height):
+    lines = dict()
+    for i in range(num_detections):
+      if scores[i] < self.MIN_SCORE: continue
+      cls = classes[i]
+      ymin, xmin, ymax, xmax = boxes[i]
+      (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
+                                    round(ymin * im_height), round(ymax * im_height))
+      if len(lines) == 0:
+        lines[int(top)] = {}
+        lines[int(top)][int(left)] = {}
+        lines[int(top)][int(left)] = {
+          'label': self.category_index[cls]['name'],
+          'scores': str(scores[i])
+        }
+      else:
+        foundLine = False
+        for lineTop in lines.keys():
+          if math.fabs(lineTop - top) < 20:
+            foundLine = True
+            foundLeft = False
+            for lineLeft in lines[lineTop].keys():
+              if math.fabs(lineLeft - left) < 5:
+                foundLeft = True
+                if scores[i] > float(lines[lineTop][lineLeft]['scores']):
+                  lines[lineTop][lineLeft] = {
+                    'label': client.category_index[cls]['name'],
+                    'scores': str(scores[i])
+                  }
+                break
+
+            if foundLeft == False:
+              lines[lineTop][int(left)] = {}
+              lines[lineTop][int(left)] = {
+                'label': client.category_index[cls]['name'],
+                'scores': str(scores[i])
+              }
+            break
+        if foundLine == False:
+          lines[int(top)] = {}
+          lines[int(top)][int(left)] = {}
+          lines[int(top)][int(left)] = {
+            'label': client.category_index[cls]['name'],
+            'scores': str(scores[i])
+          }
+
+    resLines = []
+    for key, line in sorted(lines.items()):
+      if len(line) >= 3:
+        resLine = ""
+        for lineKey, lineElem in sorted(line.items()):
+          resLine += lineElem['label']
+        resLines.append(resLine)
+
+    return resLines
+
+  def get_cols(self, num_detections, scores, classes, boxes, im_width, im_height):
+    cols = dict()
+    for i in range(num_detections):
+      if scores[i] < self.MIN_SCORE: continue
+      cls = classes[i]
+      ymin, xmin, ymax, xmax = boxes[i]
+      (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
+                                    round(ymin * im_height), round(ymax * im_height))
+
+      if len(cols) == 0:
+        cols[int(left)] = {}
+        cols[int(left)][int(top)] = {}
+        cols[int(left)][int(top)] = {
+          'label': client.category_index[cls]['name'],
+          'left': int(left),
+          'scores': str(scores[i])
+        }
+      else:
+        foundCol = False
+        for colLeft in cols.keys():
+          if math.fabs(colLeft - left) < 80:
+            foundCol = True
+            foundTop = False
+            for colTop in cols[colLeft].keys():
+              if math.fabs(colTop - top) <= 5:
+                foundTop = True
+                if scores[i] > float(cols[colLeft][colTop]['scores']):
+                  cols[colLeft][colTop] = {
+                    'left': int(left),
+                    'label': client.category_index[cls]['name'],
+                    'scores': str(scores[i])
+                  }
+                break
+
+            if foundTop == False:
+              cols[colLeft][int(top)] = {}
+              cols[colLeft][int(top)] = {
+                'left': int(left),
+                'label': client.category_index[cls]['name'],
+                'scores': str(scores[i])
+              }
+            break
+        if foundCol == False:
+          cols[int(left)] = {}
+          cols[int(left)][int(top)] = {}
+          cols[int(left)][int(top)] = {
+            'left': int(left),
+            'label': client.category_index[cls]['name'],
+            'scores': str(scores[i])
+          }
+
+    resCols = []
+    for key, col in sorted(cols.items()):
+      if len(col) >= 3:
+        resCol = ""
+        for colKey, colElem in sorted(col.items()):
+          resCol += colElem['label']
+        resCols.append(resCol)
+
+    return resCols
 
 
 def draw_bounding_box_on_image(image, box, color='red', thickness=4):
@@ -226,113 +348,8 @@ def detect_by_api():
     im_width, im_height = image.size
     boxes, scores, classes, num_detections = client.detect(image)
 
-    lines = dict()
-    cols = dict()
-    for i in range(num_detections):
-      if scores[i] < 0.3: continue
-      cls = classes[i]
-      ymin, xmin, ymax, xmax = boxes[i]
-      (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
-                                    round(ymin * im_height), round(ymax * im_height))
-
-      if len(cols) == 0:
-        cols[int(left)] = {}
-        cols[int(left)][int(top)] = {}
-        cols[int(left)][int(top)] = {
-          'label': client.category_index[cls]['name'],
-          'left': int(left),
-          'scores': str(scores[i])
-        }
-      else:
-        foundCol = False
-        for colLeft in cols.keys():
-          if math.fabs(colLeft - left) < 80:
-            foundCol = True
-            foundTop = False
-            for colTop in cols[colLeft].keys():
-              if math.fabs(colTop - top) <= 5:
-                foundTop = True
-                if scores[i] > float(cols[colLeft][colTop]['scores']):
-                  cols[colLeft][colTop] = {
-                    'left': int(left),
-                    'label': client.category_index[cls]['name'],
-                    'scores': str(scores[i])
-                  }
-                break
-
-            if foundTop == False:
-              cols[colLeft][int(top)] = {}
-              cols[colLeft][int(top)] = {
-                'left': int(left),
-                'label': client.category_index[cls]['name'],
-                'scores': str(scores[i])
-              }
-            break
-        if foundCol == False:
-          cols[int(left)] = {}
-          cols[int(left)][int(top)] = {}
-          cols[int(left)][int(top)] = {
-            'left': int(left),
-            'label': client.category_index[cls]['name'],
-            'scores': str(scores[i])
-          }
-
-      if len(lines) == 0:
-        lines[int(top)] = {}
-        lines[int(top)][int(left)] = {}
-        lines[int(top)][int(left)] = {
-          'label': client.category_index[cls]['name'],
-          'scores': str(scores[i])
-        }
-      else:
-        foundLine = False
-        for lineTop in lines.keys():
-          if math.fabs(lineTop - top) < 20:
-            foundLine = True
-            foundLeft = False
-            for lineLeft in lines[lineTop].keys():
-              if math.fabs(lineLeft - left) < 5:
-                foundLeft = True
-                if scores[i] > float(lines[lineTop][lineLeft]['scores']):
-                  lines[lineTop][lineLeft] = {
-                    'label': client.category_index[cls]['name'],
-                    'scores': str(scores[i])
-                  }
-                break
-
-            if foundLeft == False:
-              lines[lineTop][int(left)] = {}
-              lines[lineTop][int(left)] = {
-                'label': client.category_index[cls]['name'],
-                'scores': str(scores[i])
-              }
-            break
-        if foundLine == False:
-          lines[int(top)] = {}
-          lines[int(top)][int(left)] = {}
-          lines[int(top)][int(left)] = {
-            'label': client.category_index[cls]['name'],
-            'scores': str(scores[i])
-          }
-
-    resLines = []
-    for key,line in sorted(lines.items()):
-      if len(line) >= 3:
-        resLine = ""
-        for lineKey,lineElem in sorted(line.items()):
-          resLine += lineElem['label']
-        resLines.append(resLine)
-
-    resCols = []
-    for key,col in sorted(cols.items()):
-      if len(col) >= 3:
-        resCol = ""
-        for colKey,colElem in sorted(col.items()):
-          resCol += colElem['label']
-        resCols.append(resCol)
-
-    result['lines'] = resLines
-    result['cols'] = resCols
+    result['lines'] = client.get_lines(num_detections, scores, classes, boxes, im_width, im_height)
+    result['cols'] = client.get_cols(num_detections, scores, classes, boxes, im_width, im_height)
 #    result['rawLines'] = lines
 #    result['rawCols'] = cols
   else:
