@@ -143,6 +143,7 @@ class ObjectDetector(object):
       scores,
       self.category_index,
       use_normalized_coordinates=True,
+      min_score_thresh=.1,
       line_thickness=2)
 
     img = Image.fromarray(image_np, 'RGB')
@@ -177,7 +178,7 @@ def detect_objects(image_path):
 
   new_images = {}
   for i in range(num_detections):
-    if scores[i] < 0.7: continue
+    if scores[i] < 0.3: continue
     cls = classes[i]
     if cls not in new_images.keys():
       new_images[cls] = image.copy()
@@ -228,7 +229,7 @@ def detect_by_api():
     lines = dict()
     cols = dict()
     for i in range(num_detections):
-      if scores[i] < 0.7: continue
+      if scores[i] < 0.3: continue
       cls = classes[i]
       ymin, xmin, ymax, xmax = boxes[i]
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
