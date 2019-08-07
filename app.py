@@ -175,10 +175,10 @@ class ObjectDetector(object):
       lines[int(top)][int(left)] = {}
       lines[int(top)][int(left)] = {
         'label': self.category_index[cls]['name'],
-        'top': top,
-        'left': left,
-        'bottom': bottom,
-        'right': right,
+        'top': str(top),
+        'left': str(left),
+        'bottom': str(bottom),
+        'right': str(right),
         'scores': str(score)
       }
     else:
@@ -193,10 +193,10 @@ class ObjectDetector(object):
               if score > float(lines[lineTop][lineLeft]['scores']):
                 lines[lineTop][lineLeft] = {
                   'label': client.category_index[cls]['name'],
-                  'top': top,
-                  'left': left,
-                  'bottom': bottom,
-                  'right': right,
+                  'top': str(top),
+                  'left': str(left),
+                  'bottom': str(bottom),
+                  'right': str(right),
                   'scores': str(score)
                 }
               break
@@ -205,10 +205,10 @@ class ObjectDetector(object):
             lines[lineTop][int(left)] = {}
             lines[lineTop][int(left)] = {
               'label': client.category_index[cls]['name'],
-              'top': top,
-              'left': left,
-              'bottom': bottom,
-              'right': right,
+              'top': str(top),
+              'left': str(left),
+              'bottom': str(bottom),
+              'right': str(right),
               'scores': str(score)
             }
           break
@@ -217,10 +217,10 @@ class ObjectDetector(object):
         lines[int(top)][int(left)] = {}
         lines[int(top)][int(left)] = {
           'label': client.category_index[cls]['name'],
-          'top': top,
-          'left': left,
-          'bottom': bottom,
-          'right': right,
+          'top': str(top),
+          'left': str(left),
+          'bottom': str(bottom),
+          'right': str(right),
           'scores': str(score)
         }
 
@@ -230,10 +230,10 @@ class ObjectDetector(object):
       cols[int(left)][int(top)] = {}
       cols[int(left)][int(top)] = {
         'label': client.category_index[cls]['name'],
-        'top': top,
-        'left': left,
-        'bottom': bottom,
-        'right': right,
+        'top': str(top),
+        'left': str(left),
+        'bottom': str(bottom),
+        'right': str(right),
         'scores': str(score)
       }
     else:
@@ -247,10 +247,10 @@ class ObjectDetector(object):
               foundTop = True
               if score > float(cols[colLeft][colTop]['scores']):
                 cols[colLeft][colTop] = {
-                  'top': top,
-                  'left': left,
-                  'bottom': bottom,
-                  'right': right,
+                  'top': str(top),
+                  'left': str(left),
+                  'bottom': str(bottom),
+                  'right': str(right),
                   'label': client.category_index[cls]['name'],
                   'scores': str(score)
                 }
@@ -259,10 +259,10 @@ class ObjectDetector(object):
           if foundTop == False:
             cols[colLeft][int(top)] = {}
             cols[colLeft][int(top)] = {
-              'top': top,
-              'left': left,
-              'bottom': bottom,
-              'right': right,
+              'top': str(top),
+              'left': str(left),
+              'bottom': str(bottom),
+              'right': str(right),
               'label': client.category_index[cls]['name'],
               'scores': str(score)
             }
@@ -271,10 +271,10 @@ class ObjectDetector(object):
         cols[int(left)] = {}
         cols[int(left)][int(top)] = {}
         cols[int(left)][int(top)] = {
-          'top': top,
-          'left': left,
-          'bottom': bottom,
-          'right': right,
+          'top': str(top),
+          'left': str(left),
+          'bottom': str(bottom),
+          'right': str(right),
           'label': client.category_index[cls]['name'],
           'scores': str(score)
         }
@@ -385,6 +385,8 @@ def detect_by_api():
 
     result['lines'] = client.get_res_lines(lines)
     result['cols'] = client.get_res_cols(cols)
+    result['rawLines'] = lines
+    result['rawCols'] = cols
   else:
     result['error'] = 'no image found'
   return result
