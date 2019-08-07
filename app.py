@@ -298,8 +298,11 @@ class ObjectDetector(object):
                 resLineId = ""
                 for lineKey, lineElem in sorted(line.items()):
                     resLineId += lineElem['label']
-                    resLine.append(lineElem['label'] + "," + lineElem['left'] + "," + lineElem['top'] + ","
-                                   + lineElem['right'] + "," + lineElem['bottom'])
+                    resLine.append(lineElem['label']
+                                   + "," + lineElem['left'].rstrip('0').rstrip('.')
+                                   + "," + lineElem['top'].rstrip('0').rstrip('.')
+                                   + "," + lineElem['right'].rstrip('0').rstrip('.')
+                                   + "," + lineElem['bottom'].rstrip('0').rstrip('.'))
 
                 resLines[resLineId] = resLine
         return resLines
@@ -322,8 +325,11 @@ class ObjectDetector(object):
                 resColId = ""
                 for colKey, colElem in sorted(col.items()):
                     resColId += colElem['label']
-                    resCol.append(colElem['label'] + "," + colElem['left'] + "," + colElem['top'] + ","
-                                  + colElem['right'] + "," + colElem['bottom'])
+                    resCol.append(colElem['label']
+                                  + "," + colElem['left'].rstrip('0').rstrip('.')
+                                  + "," + colElem['top'].rstrip('0').rstrip('.')
+                                  + "," + colElem['right'].rstrip('0').rstrip('.')
+                                  + "," + colElem['bottom'].rstrip('0').rstrip('.'))
                 resCols[resColId] = resCol
         return resCols
 
