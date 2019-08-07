@@ -161,36 +161,24 @@ class ObjectDetector(object):
       ymin, xmin, ymax, xmax = boxes[i]
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
-      self.add_line(lines, top, left, cls, scores[i])
-      self.add_col(cols, top, left, cls, scores[i])
+      self.add_line_symbol(lines, top, left, bottom, right, cls, scores[i])
+      self.add_col_symbol(cols, top, left, bottom, right, cls, scores[i])
 
-    resLines = []
-    for key, line in sorted(lines.items()):
-      if len(line) >= 3:
-        resLine = ""
-        for lineKey, lineElem in sorted(line.items()):
-          resLine += lineElem['label']
-        resLines.append(resLine)
-
-    resCols = []
-    for key, col in sorted(cols.items()):
-      if len(col) >= 3:
-        resCol = ""
-        for colKey, colElem in sorted(col.items()):
-          resCol += colElem['label']
-        resCols.append(resCol)
-
-    result['lines'] = resLines
-    result['cols'] = resCols
+    result['lines'] = self.get_res_lines(lines)
+    result['cols'] = self.get_res_cols(cols)
 
     return result
 
-  def add_line(self, lines, top, left, cls, score):
+  def add_line_symbol(self, lines, top, left, bottom, right, cls, score):
     if len(lines) == 0:
       lines[int(top)] = {}
       lines[int(top)][int(left)] = {}
       lines[int(top)][int(left)] = {
         'label': self.category_index[cls]['name'],
+        'top': top,
+        'left': left,
+        'bottom': bottom,
+        'right': right,
         'scores': str(score)
       }
     else:
@@ -205,6 +193,10 @@ class ObjectDetector(object):
               if score > float(lines[lineTop][lineLeft]['scores']):
                 lines[lineTop][lineLeft] = {
                   'label': client.category_index[cls]['name'],
+                  'top': top,
+                  'left': left,
+                  'bottom': bottom,
+                  'right': right,
                   'scores': str(score)
                 }
               break
@@ -213,6 +205,10 @@ class ObjectDetector(object):
             lines[lineTop][int(left)] = {}
             lines[lineTop][int(left)] = {
               'label': client.category_index[cls]['name'],
+              'top': top,
+              'left': left,
+              'bottom': bottom,
+              'right': right,
               'scores': str(score)
             }
           break
@@ -221,16 +217,23 @@ class ObjectDetector(object):
         lines[int(top)][int(left)] = {}
         lines[int(top)][int(left)] = {
           'label': client.category_index[cls]['name'],
+          'top': top,
+          'left': left,
+          'bottom': bottom,
+          'right': right,
           'scores': str(score)
         }
 
-  def add_col(self, cols, top, left, cls, score):
+  def add_col_symbol(self, cols, top, left, bottom, right, cls, score):
     if len(cols) == 0:
       cols[int(left)] = {}
       cols[int(left)][int(top)] = {}
       cols[int(left)][int(top)] = {
         'label': client.category_index[cls]['name'],
-        'left': int(left),
+        'top': top,
+        'left': left,
+        'bottom': bottom,
+        'right': right,
         'scores': str(score)
       }
     else:
@@ -244,7 +247,10 @@ class ObjectDetector(object):
               foundTop = True
               if score > float(cols[colLeft][colTop]['scores']):
                 cols[colLeft][colTop] = {
-                  'left': int(left),
+                  'top': top,
+                  'left': left,
+                  'bottom': bottom,
+                  'right': right,
                   'label': client.category_index[cls]['name'],
                   'scores': str(score)
                 }
@@ -253,7 +259,10 @@ class ObjectDetector(object):
           if foundTop == False:
             cols[colLeft][int(top)] = {}
             cols[colLeft][int(top)] = {
-              'left': int(left),
+              'top': top,
+              'left': left,
+              'bottom': bottom,
+              'right': right,
               'label': client.category_index[cls]['name'],
               'scores': str(score)
             }
@@ -262,10 +271,33 @@ class ObjectDetector(object):
         cols[int(left)] = {}
         cols[int(left)][int(top)] = {}
         cols[int(left)][int(top)] = {
-          'left': int(left),
+          'top': top,
+          'left': left,
+          'bottom': bottom,
+          'right': right,
           'label': client.category_index[cls]['name'],
           'scores': str(score)
         }
+
+  def get_res_lines(self, lines):
+    resLines = []
+    for key, line in sorted(lines.items()):
+      if len(line) >= 3:
+        resLine = ""
+        for lineKey, lineElem in sorted(line.items()):
+          resLine += lineElem['label']
+        resLines.append(resLine)
+    return resLines
+
+  def get_res_cols(self, cols):
+    resCols = []
+    for key, col in sorted(cols.items()):
+      if len(col) >= 3:
+        resCol = ""
+        for colKey, colElem in sorted(col.items()):
+          resCol += colElem['label']
+        resCols.append(resCol)
+    return resCols
 
 def draw_bounding_box_on_image(image, box, color='red', thickness=4):
   draw = ImageDraw.Draw(image)
@@ -348,27 +380,11 @@ def detect_by_api():
       ymin, xmin, ymax, xmax = boxes[i]
       (left, right, top, bottom) = (round(xmin * im_width), round(xmax * im_width),
                                     round(ymin * im_height), round(ymax * im_height))
-      client.add_line(lines, top, left, cls, scores[i])
-      client.add_col(cols, top, left, cls, scores[i])
+      client.add_line_symbol(lines, top, left, bottom, right, cls, scores[i])
+      client.add_col_symbol(cols, top, left, bottom, right, cls, scores[i])
 
-    resLines = []
-    for key, line in sorted(lines.items()):
-      if len(line) >= 3:
-        resLine = ""
-        for lineKey, lineElem in sorted(line.items()):
-          resLine += lineElem['label']
-        resLines.append(resLine)
-
-    resCols = []
-    for key, col in sorted(cols.items()):
-      if len(col) >= 3:
-        resCol = ""
-        for colKey, colElem in sorted(col.items()):
-          resCol += colElem['label']
-        resCols.append(resCol)
-
-    result['lines'] = resLines
-    result['cols'] = resCols
+    result['lines'] = client.get_res_lines(lines)
+    result['cols'] = client.get_res_cols(cols)
   else:
     result['error'] = 'no image found'
   return result
